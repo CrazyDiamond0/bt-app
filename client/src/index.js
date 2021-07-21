@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import Time from "./Time";
 
 class App extends Component {
   constructor(props) {
@@ -11,6 +12,8 @@ class App extends Component {
     this.state = {
       UserID: "",
       DateTime: "",
+      username: "",
+      Password: "",
     };
   }
 
@@ -21,9 +24,11 @@ class App extends Component {
   };
 
   handleSubmit = (e) => {
-    console.log(this.state.username);
     axios.get(`/user/${this.state.username}`).then((response) => {
-      console.log(response.data);
+      this.setState({
+        DateTime: response.data.DateTime,
+        Password: response.data.Password,
+      });
     });
     e.preventDefault();
   };
@@ -51,6 +56,14 @@ class App extends Component {
             </div>
           </div>
         </form>
+        <div>
+          Time until you can change password:
+          <Time
+            time={30 - parseInt((new Date() - this.state.DateTime) / 1000)}
+          />
+        </div>
+
+        <div>Current password: {this.state.Password}</div>
       </div>
     );
   }
